@@ -18,17 +18,35 @@
 
 ## 2026-05-18
 
-- **やったこと**: Laravel 製タスク CRUD（[CRUD](https://github.com/furuyaaaa/CRUD)）の **コアとなるコードの置き場所** を整理し、ルーティング・コントローラ・モデル・マイグレーション・ビューの対応を確認した。学習メモを本リポジトリの `LEARNING_LOG.md` に追記した。
+- **① クラス・インスタンス・プロパティ**  
+  `class` は設計図、`new` で生成したものがインスタンス（実体）、インスタンスが持つ変数がプロパティ。`protected $gate;` はプロパティの宣言（箱を用意するだけで中身はまだ空）。変数の宣言と違い、値なしで宣言できる。
 
-- **理解したこと**:
-  - **ルート** … `routes/web.php`（`Route::resource('tasks', ...)` やレポート用ルート）
-  - **HTTP 層** … `app/Http/Controllers/TaskController.php`
-  - **モデル** … `app/Models/Task.php`
-  - **DB スキーマ** … `database/migrations/*_create_tasks_table.php`
-  - **画面** … `resources/views/tasks/`（`index` / `create` / `edit` / `report`）
-  - **認証** … `routes/auth.php` と `app/Http/Controllers/Auth/`。**プロフィール** … `ProfileController` と `resources/views/profile/`
+- **② コンストラクタと DI 注入**  
+  `__construct()` はインスタンス生成時に自動で呼ばれる初期設定メソッド。引数にタイプヒンティング（`Gate $gate` など）を書くだけで、DI コンテナが自動でインスタンスを生成して渡してくれる。インスタンスを「作る」のは `new` キーワードであり、コンストラクタは「受け取って保存する場所」。
 
-- **次やること**（任意）: ルートモデル結合・FormRequest・Policy など、続きのレイヤーをコードで追う
+- **③ `$this` とプロパティへのアクセス**  
+  `$this->gate` は「このインスタンス自身の `gate` プロパティ」を指す。`protected $gate` と `$this->gate` は同じプロパティを指しており、`$this->` をつけることで引数の `$gate` と区別できる。
+
+- **④ アノテーション**  
+  `@var`（プロパティの型）・`@param`（引数の型）・`@return`（戻り値の型）・`@throws`（投げる可能性のある例外）の 4 種類。PHP の動作には影響せず、IDE や開発者への説明コメント。
+
+- **⑤ `static` メソッドとファサード**  
+  `static` はインスタンスを作らずに `クラス名::メソッド名()` で呼べるメソッド。ファサードは DI コンテナのインスタンスに `::` で簡単アクセスする Laravel の特別な仕組みで、`Route`・`Gate`・`Auth`・`DB` など決まったクラスのみ。`PostController::class` の `::class` はメソッドではなく PHP のキーワードで、完全修飾クラス名を文字列で返すだけ。
+
+- **⑥ Closure・callable・callback・`use`**  
+  Closure は名前のない関数（無名関数）で変数に入れたり引数として渡せる。`callable` はそれを受け取る型、`callback` は後で呼び出すために渡す関数の使い方を指す言葉。`use` は外側の変数を Closure 内に引き継ぐキーワード。`fn($x) => $x` はアロー関数（短い書き方）。
+
+- **⑦ `Authorize.php` の仕組み**  
+  ミドルウェアとして動作し、リクエストが来たときに `$this->gate->authorize()` で権限チェックをしてから `$next($request)` で次の処理に渡す門番の役割。`using()` は `クラス名:ability名,モデル名` という設定文字列を生成する `static` メソッド。
+
+- **⑧ ability と Gate の権限管理**  
+  ability は「誰が何をできるか」を表す権限の名前。`Gate::define()` で登録し、`Gate::check()` / `Gate::authorize()` で確認する。`Gate::resource()` を使うと `viewAny`・`view`・`create`・`update`・`delete` の 5 つをまとめて定義できる。
+
+- **⑨ Enum（PHP 8.1+）**  
+  決まった値の集まりをまとめる仕組み。値なし（`UnitEnum`）と値あり（`BackedEnum`）の 2 種類がある。文字列をそのまま使うよりタイポを防げる。`enum_value()` を使うと Enum でも文字列でも統一して文字列として取得できる。
+
+- **⑩ ルーティングと CRUD**  
+  `Route::get/post/put/delete()` の第一引数が URL、第二引数が `[コントローラー::class, 'メソッド名']` の配列。`Route::resource()` で 7 つのルートをまとめて登録できる。コントローラーの引数に `Request $request` と書くだけで DI コンテナが自動注入してくれる。
 
 ## 2026-05-15
 
