@@ -16,6 +16,20 @@
 
 ---
 
+## 2026-05-18
+
+- **やったこと**: Laravel 製タスク CRUD（[CRUD](https://github.com/furuyaaaa/CRUD)）の **コアとなるコードの置き場所** を整理し、ルーティング・コントローラ・モデル・マイグレーション・ビューの対応を確認した。学習メモを本リポジトリの `LEARNING_LOG.md` に追記した。
+
+- **理解したこと**:
+  - **ルート** … `routes/web.php`（`Route::resource('tasks', ...)` やレポート用ルート）
+  - **HTTP 層** … `app/Http/Controllers/TaskController.php`
+  - **モデル** … `app/Models/Task.php`
+  - **DB スキーマ** … `database/migrations/*_create_tasks_table.php`
+  - **画面** … `resources/views/tasks/`（`index` / `create` / `edit` / `report`）
+  - **認証** … `routes/auth.php` と `app/Http/Controllers/Auth/`。**プロフィール** … `ProfileController` と `resources/views/profile/`
+
+- **次やること**（任意）: ルートモデル結合・FormRequest・Policy など、続きのレイヤーをコードで追う
+
 ## 2026-05-15
 
 - **① DIコンテナ**  
