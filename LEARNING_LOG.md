@@ -48,6 +48,18 @@
 - **⑩ ルーティングと CRUD**  
   `Route::get/post/put/delete()` の第一引数が URL、第二引数が `[コントローラー::class, 'メソッド名']` の配列。`Route::resource()` で 7 つのルートをまとめて登録できる。コントローラーの引数に `Request $request` と書くだけで DI コンテナが自動注入してくれる。
 
+- **⑪ Laravel と PostgreSQL**  
+  [CRUD](https://github.com/furuyaaaa/CRUD) の接続を `.env` の `DB_CONNECTION=pgsql` とホスト・ポート・DB 名・ユーザー／パスワードで Postgres に向ける。サーバ側で DB を作ってから `php artisan migrate`。`INFO Nothing to migrate.` はエラーではなく「未実行のマイグレがない」状態。`php artisan db:show` が `intl` で止まる場合は PHP の `extension=intl` を有効にする（接続とは別）。
+
+- **⑫ シーダー（DatabaseSeeder）**  
+  `php artisan db:seed` で `users` / `tasks` に初期データを流し込める。`User::firstOrCreate` で決まったメールのユーザーを用意し、`User::factory()` で人数を増やす。`User::factory()->make()->toArray()` だけだと `password` が `$hidden` で配列に乗らず NOT NULL 違反になるので、`firstOrCreate` 第 2 引数では `password` を明示（`User` の `hashed` キャストでハッシュ化）。`Task::factory()->for($user)` で `user_id` を付けたタスクを作る。
+
+- **⑬ pgAdmin 4**  
+  データベース `crud` → `Schemas` → `public` → `Tables` に `users`・`tasks`。Query Tool は **SQL エディタと Data Output の境界線を上にドラッグ**すると入力欄が現れる。実行は ▶ または **F5**。
+
+- **⑭ SQL で特定の行を取り出す**  
+  `SELECT 列 FROM 表 WHERE 条件`。`tasks.user_id` は `users.id` を参照するので、`JOIN users u ON u.id = t.user_id` でメールや名前付きでタスク一覧を取れる。`GROUP BY` と `COUNT` でユーザーごとの件数集計もできる。
+
 ## 2026-05-15
 
 - **① DIコンテナ**  
