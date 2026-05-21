@@ -16,6 +16,28 @@
 
 ---
 
+## 2026-05-22
+
+### 今日の学習まとめ（Laravel 内部・SQL・設計）
+
+- **PostgresGrammar（Laravel → PostgreSQL へ翻訳）**  
+  `PostgresGrammar` は Laravel が組み立てたクエリを **PostgreSQL 向け SQL 文字列に変換する翻訳担当**。`whereBasic()` では **`like` / `ilike` 系で `::text` キャストを自動付与**、`whereBitwise()` では **PDO のプレースホルダと衝突しないよう `?` を `??` にエスケープ**することを学んだ。`compileInsertGetId()` で **PostgreSQL 専用の `RETURNING`** が付く仕組みも確認。
+
+- **QueryBuilder — `select()` / `selectSub()`**  
+  通常のカラムと **サブクエリ**を振り分ける仕組みを読んだ。**連想配列のキーが文字列かどうかで分岐する**ところがポイント。
+
+- **Model.php — `boot()` まわり**  
+  `bootIfNotBooted()` が **モデルを最初に使うときだけ一度だけ** boot を走らせること。`bootTraits()` が **`boot〇〇()` / `initialize〇〇()` をトレイトから自動検出して実行・登録**すること。`use SoftDeletes` の 1 行でソフトデリートが効く理由の一端を理解。
+
+- **SQL（PostgreSQL／[PG Exercises](https://pgexercises.com/)）**  
+  date・joins 系の演習のなかで **`EXTRACT(epoch FROM ...)`, `generate_series()`, タイムスタンプの引き算** などを学んだ。サブクエリが **SELECT / WHERE / FROM の 3 箇所に置ける**こと、特に **SELECT 句の相関サブクエリは行ごとに評価され JOIN より遅くなりやすい**ことを理解。**`INSERT` / `UPDATE` の基本と PostgreSQL の `RETURNING`** も整理。
+
+- **SOLID**  
+  単一責任・開放閉鎖・リスコフ・インターフェース分離・依存性逆転。**Grammar と QueryBuilder の責務分離や、DB 別 Grammar の拡張**に、読んだ Laravel コード上で繋がる実感が持てた。
+
+- **気づき**  
+  **QueryBuilder と Eloquent の違い**、**PDO と SQL インジェクション対策**、**`toSql()` でのデバッグ**など、実務につながる知識がまとまった。
+
 ## 2026-05-21
 
 - **`users` と `tasks` の違い（Laravel CRUD）**  
