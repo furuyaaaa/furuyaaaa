@@ -16,7 +16,22 @@
 
 ---
 
-## 2026-05-22
+## 2026-05-21
+
+- **`users` と `tasks` の違い（Laravel CRUD）**  
+  `users` は **ログインする人（アカウント）**、`tasks` は **その人のやることリスト**。`tasks.user_id` が `users.id` に外部キーで繋がり、**1 ユーザーに複数タスク**。
+
+- **テーブル・行・カラムが増えるタイミング**  
+  **ユーザー数・タスク数の増加** → 主に **行** が増える。**機能追加・改修** → **カラム**や **新テーブル** が増える。公開やアクセス増だけでテーブルが自動では増えない。
+
+- **`migrations` テーブルと `database/migrations/` の PHP**  
+  フォルダの PHP は **変更手順の履歴（Git と一緒に管理）**。DB の `migrations` テーブルは **どこまで実行したかのチェックリスト**で、**マイグレ 1 ファイル ≒ 1 行**なので行数は少ない。
+
+- **セッション・キャッシュ・キュー**  
+  **セッション** … ログイン状態などリクエスト間の「続き」。**キャッシュ** … 同じ取得・計算の再利用。**キュー** … 重い処理を後で回す待ち行列。`SESSION_DRIVER` 等で **DB に置く**と `sessions` / `cache` / `jobs` などのテーブルが使われる。考え方は Laravel 以外の RDB でも同じ。
+
+- **実践（別リポ [CRUD](https://github.com/furuyaaaa/CRUD)）**  
+  PostgreSQL 上で `ThousandDummyTasksSeeder`（`tasks` 1000 件）、`ThousandDummyUsersSeeder`（`users` 1000 件）でダミー投入。pgAdmin の Query Tool で `SELECT COUNT(*)`、複数文は **最後の結果だけ**表示されやすいので **1 文ずつ**確認するとよい。
 
 ### 今日の学習まとめ（Laravel 内部・SQL・設計）
 
@@ -37,23 +52,6 @@
 
 - **気づき**  
   **QueryBuilder と Eloquent の違い**、**PDO と SQL インジェクション対策**、**`toSql()` でのデバッグ**など、実務につながる知識がまとまった。
-
-## 2026-05-21
-
-- **`users` と `tasks` の違い（Laravel CRUD）**  
-  `users` は **ログインする人（アカウント）**、`tasks` は **その人のやることリスト**。`tasks.user_id` が `users.id` に外部キーで繋がり、**1 ユーザーに複数タスク**。
-
-- **テーブル・行・カラムが増えるタイミング**  
-  **ユーザー数・タスク数の増加** → 主に **行** が増える。**機能追加・改修** → **カラム**や **新テーブル** が増える。公開やアクセス増だけでテーブルが自動では増えない。
-
-- **`migrations` テーブルと `database/migrations/` の PHP**  
-  フォルダの PHP は **変更手順の履歴（Git と一緒に管理）**。DB の `migrations` テーブルは **どこまで実行したかのチェックリスト**で、**マイグレ 1 ファイル ≒ 1 行**なので行数は少ない。
-
-- **セッション・キャッシュ・キュー**  
-  **セッション** … ログイン状態などリクエスト間の「続き」。**キャッシュ** … 同じ取得・計算の再利用。**キュー** … 重い処理を後で回す待ち行列。`SESSION_DRIVER` 等で **DB に置く**と `sessions` / `cache` / `jobs` などのテーブルが使われる。考え方は Laravel 以外の RDB でも同じ。
-
-- **実践（別リポ [CRUD](https://github.com/furuyaaaa/CRUD)）**  
-  PostgreSQL 上で `ThousandDummyTasksSeeder`（`tasks` 1000 件）、`ThousandDummyUsersSeeder`（`users` 1000 件）でダミー投入。pgAdmin の Query Tool で `SELECT COUNT(*)`、複数文は **最後の結果だけ**表示されやすいので **1 文ずつ**確認するとよい。
 
 ## 2026-05-20
 
