@@ -16,6 +16,27 @@
 
 ---
 
+## 2026-05-22
+
+### Model.php の読解
+
+- **`newQuery()` の流れと QueryBuilder の完成**  
+  `newQuery()` が内側で `newQueryWithoutScopes()` を呼び、さらに **`newModelQuery()` → `newBaseQueryBuilder()` → `getConnection()->query()`** と進み、最終的に **`PostgresGrammar` を内包した `QueryBuilder`** ができるまでを追った。**`User::where()` と書いた瞬間に裏で何が起きるか**が腹落ちした。
+
+- **グローバルスコープと `save()`**  
+  **`registerGlobalScopes()`** でグローバルスコープが装着される仕組み。`save()` 内の **`exists` フラグ**で **INSERT / UPDATE** が分岐すること。**`isDirty()`** で変更がなければ無駄な SQL を打たない工夫も整理。
+
+### SQL の学習
+
+- **サブクエリの置き場所**  
+  **SELECT・FROM・WHERE** の 3 箇所で使える。**FROM 内**のサブクエリは **一時テーブル（派生テーブル）** として扱われる。**WHERE 内**で外側の行を参照するサブクエリは **相関サブクエリ**で、**行ごとに繰り返し評価**されやすい。
+
+- **ウィンドウ関数**  
+  **`RANK()` / `ROW_NUMBER()` / `NTILE()`** の違いを整理。`OVER()` が空なら全行対象、`OVER(ORDER BY …)` で順位付け。**`NTILE(n)`** は結果を **n 等分する**ユニークな関数。
+
+- **その他（OSS-DB Silver 意識）**  
+  **`CASE WHEN`** は SELECT だけでなく **集約関数の内側**にも書ける。**`trim` / `to_char`** は **OSS-DB Silver の出題範囲**。**`ROW_NUMBER`・`WITH` 句・移動平均** は Silver では **優先度が低め**とも確認。
+
 ## 2026-05-21
 
 - **`users` と `tasks` の違い（Laravel CRUD）**  
