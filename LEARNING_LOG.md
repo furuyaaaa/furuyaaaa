@@ -16,7 +16,7 @@
 
 ---
 
-## 2026-05-23
+## 2026-05-25
 
 ### `Model.php` — `performInsert()` / `performUpdate()`
 
