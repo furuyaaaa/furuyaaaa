@@ -16,6 +16,29 @@
 
 ---
 
+## 2026-05-23
+
+### `Model.php` — `performInsert()` / `performUpdate()`
+
+- **`performInsert()`**  
+  - **UUID / ULID** を使うモデルでは **`setUniqueIds()`** で **INSERT 前にアプリ側で PK を生成**。  
+  - **AUTO INCREMENT** の場合は **`insertAndSetId()`** で **INSERT 後に PostgreSQL の `RETURNING`** で DB 採番の PK を受け取る。  
+    → **2 パターン**があると整理。  
+  - **`fireModelEvent()`** で **Observer が処理をキャンセルできる**こと。  
+  - **`usesTimestamps()`** により **`created_at` / `updated_at`** が自動セットされること。
+
+- **`performUpdate()`**  
+  **`performInsert()` と構造はほぼ同型**だが、INSERT が全カラム送りなのに対し、**`getDirtyForUpdate()` で変更のあったカラムだけ** を UPDATE に送る **重要な違い**。
+
+- **設計・慣例**  
+  **Trait／オーバーライド／Convention over Configuration**。クラス名からテーブル名を自動解決する考え方、**`$incrementing`・`$timestamps` を「例外だけ上書き」**するパターン。
+
+- **周辺語彙の整理**  
+  UUID・ULID・AUTO INCREMENT・`RETURNING`・PK・キャメルケース・スネークケース などを整理しながら読んだ。
+
+- **気づき・一本の流れ**  
+  画面の **F キー** → **`$wire.call()`** → **Livewire コンポーネント** → **`$model->save()`** → **`performInsert()` / `performUpdate()`** → **QueryBuilder** → **PostgresGrammar** → **`RETURNING id`** → **Aurora PostgreSQL** までが **一続きで繋がった**感覚を得た一日。
+
 ## 2026-05-22
 
 ### Model.php の読解
