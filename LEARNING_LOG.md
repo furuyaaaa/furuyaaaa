@@ -16,6 +16,109 @@
 
 ---
 
+## 2026-05-26
+
+### 1. `wire:model` とは
+
+`wire:model` は **HTML の入力と PHP の `public` プロパティを Livewire が自動同期**する仕組み。ユーザーが入力すると **サーバー側プロパティにリアルタイムで反映**される。
+
+同期タイミングは **修飾子**で変える。**`wire:model.blur`** はフォーカスが外れたとき、**`wire:model.live`** は入力のたび。**`.live` をむやみに使うと DB アクセスが連打**されることがあるので、プロジェクトで **`.blur` / `.live` のどちらが使われているか**を見ると「なぜ `.blur` か」の設計意図につながる。
+
+プロパティが変わると **`updated` + プロパティ名** のメソッドが自動で呼ばれる。
+
+### 2. `page.js` のイベント委譲
+
+数百セルを **document 直下のリスナー 2 本** で賄うパターン（例: **113〜146 行付近のイメージ**）。
+
+```javascript
+document.addEventListener("blur", ...)    // 全セル共通
+document.addEventListener("keydown", ...) // * キー用など
+```
+
+各セルに個別バインドせず、`document` で受け、`class="b00201m-cell-input"` と **`data-*`** で対象セルを特定する。**イベント委譲**で、セルごとにリスナーを増やすと重くなる問題を避けるパフォーマンス手法。
+
+### 3. Eloquent と SQL の対応
+
+例: `where('unit_id', $keys['unit_id'])` は SQL の **`WHERE unit_id = ?`** に対応。**左辺はカラム名（固定的）**、**右辺は呼び出し元からの動的值**。
+
+`unit_id`（内部 ID）と `unit_code`（表示用）は **それぞれセッションから取得**しており、この例では相互変換はしていない。**`getGlobalUnitId()`** は `Page.php` の **`private`** で、Blade からは叩かない想定。
+
+### 4. `Page.php` と Blade の接続
+
+`Page.php` の **`render()`** が `view('livewire.b00201m.page')` を返すことで **Livewire と Blade が接続**される。
+
+ユーザー操作は **`wire:model`（ヘッダー）** と **`page.js`（セル・特殊キー）** の 2 経路で **`Page.php` に収束**。`Page.php` は Blade へ表示指示を出しつつ、**複数の Service** 経由で DB・業務ルールを処理し **PostgreSQL** と通信する、という流れ。
+
+```text
+ユーザー操作
+    ├── wire:model（ヘッダー）
+    └── page.js（セル・特殊キー）
+            ↓
+        Page.php
+            ├── Blade（表示）
+            └── Service × 複数（DB・業務ルール）
+                    ↓
+                PostgreSQL
+```
+
+### 5. SQL — `GROUP BY`
+
+**同じ値の行をまとめ、グループ単位で集計**する。**部門ごと・月ごと**などの合計・平均に使う。
+
+集計関数の例: `COUNT`, `SUM`, `AVG`, `MAX`, `MIN`。
+
+```sql
+SELECT department, COUNT(*) AS 社員数
+FROM employees
+GROUP BY department;
+```
+
+### 6. SQL — `HAVING`
+
+**グループ化したあと**の結果をさらに絞る。**`WHERE` はグループ化前の行、`HAVING` はグループ化後の集計結果**への条件。 **`HAVING` には集計関数を書ける**が、**`WHERE` には原則集計関数を書けない**。
+
+```sql
+SELECT department, COUNT(*) AS 社員数
+FROM employees
+GROUP BY department
+HAVING COUNT(*) >= 10;
+```
+
+### 7. SQL — `WHERE` と `HAVING` の使い分け
+
+**`WHERE` → グループ化前、`HAVING` → グループ化後**。先に **`WHERE` で減らす**とグループ集計が軽くなり効率的。**書ける条件はできるだけ `WHERE` 側**がベターなことが多い。
+
+```sql
+SELECT department, AVG(salary) AS 平均給与
+FROM employees
+WHERE salary > 200000
+GROUP BY department
+HAVING AVG(salary) > 350000;
+```
+
+処理の順序イメージ: **① WHERE**（行絞り）→ **② GROUP BY** → **③ HAVING**（グループ絞り）→ **④ SELECT**（表示）。
+
+### 8. SQL — `GROUP BY` とよくある間違い
+
+`GROUP BY` 使用時、`SELECT` に出せるのは原則 **`GROUP BY` に並んだ列**か **集約式だけ**。
+
+```sql
+-- NG：name は GROUP BY にも集約にも含まれていない
+SELECT department, name, COUNT(*)
+FROM employees
+GROUP BY department;
+
+-- OK
+SELECT department, COUNT(*)
+FROM employees
+GROUP BY department;
+```
+
+### 学び方メモ
+
+- いきなり全部は理解しない。**「どこに何があるか」「ざっくりした流れ」** の **地図**を持つと未知のコードでも進める。  
+- 成長イメージ: **読めない → 読める → 真似て書ける → 自分で書ける**。AI に書かせて終わりより、自分で **「なぜこう書いてあるか」を追う方が実力になりやすい**。
+
 ## 2026-05-25
 
 ### `Model.php` — `performInsert()` / `performUpdate()`
