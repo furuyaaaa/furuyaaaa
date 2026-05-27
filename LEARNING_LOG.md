@@ -16,6 +16,37 @@
 
 ---
 
+## 2026-05-27
+
+### `save()` の全体像
+
+- **`mergeAttributesFromCachedCasts()`** … キャスト済みの値を **`$attributes`** に反映したうえで、**`newModelQuery()`** で **QueryBuilder** を生成する。  
+- **`fireModelEvent('saving')`** … 保存前フック（**キャンセル可能**かどうかは後述の `halt`）。  
+- **`exists` フラグ**で **INSERT (`performInsert`) / UPDATE (`performUpdate`)** を分岐。  
+- **`finishSave()`** … **`saved` イベント**、**関連モデルのタイムスタンプ更新**、**`syncOriginal()`** による **`$original` のリセット** など、保存後の後処理。
+
+### `isDirty()` と無駄 UPDATE 回避
+
+**`$original` と `$attributes` を比較**して変更の有無を判定し、**変更がなければ無駄な UPDATE を出さない**設計。
+
+### `fireModelEvent()` と `halt`
+
+**`halt`** により、**保存前イベント**（例: `saving` / `creating` / `updating`）は **キャンセル可能**。**保存後**（`saved` / `created` / `updated`）は **キャンセル不可**の設計。
+
+### Eloquent リレーション — `hasMany()`
+
+- **外部キー・ローカルキーを自動決定**し **`HasMany` インスタンス**を生成。  
+- **`addConstraints()`** で **`WHERE user_id = ?`** のような条件が **自動付与**されること。  
+- これが **`N+1` の根本原因**になり得ることともつながって理解。
+
+### 周辺の文法・概念
+
+**継承** `Relation` → `HasOneOrMany` → `HasMany`、**`parent::__construct()`** による親初期化、**`tap()`**、**`iterable` 型**、**PHPDoc アノテーション** などを整理。
+
+### 現場のつながり（H01001m）
+
+**Blade → `Page.php` → `SlipMemoService` → `slip_memos`** までの一本線が掴めた。さらに画面の **F キー** → **`$wire.call()`** → **Livewire** → **`$model->save()`** → **QueryBuilder** → **PostgresGrammar** → **Aurora PostgreSQL** まで、**保存の全連鎖が頭の中で繋がった**一日。
+
 ## 2026-05-26
 
 ### 1. `wire:model` とは
