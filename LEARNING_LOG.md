@@ -16,6 +16,17 @@
 
 ---
 
+## 2026-05-28
+
+### 5/28学んだこと
+
+5/28は HasOneOrMany.php、HasMany.php、BelongsTo.php の 3 つのファイルを読みました。  
+まず __construct() から読み始め、foreignKey や localKey などの必要な情報をセットしてから parent::__construct() で親クラスの Relation に共通処理を委譲する仕組みを理解しました。引数がどこから来るのかを追いかけながら読むことで、クラス間のつながりが見えてきました。  
+次に addConstraints() を読み、$user->posts と書いたときに WHERE posts.user_id = 1 という WHERE 句が自動的に組み立てられる仕組みを理解しました。static::$constraints というスイッチによって、通常時は WHERE 句が付き、Eager Loading のときは一時的に OFF になる仕組みも理解しました。  
+buildDictionary() と matchOneOrMany() では、Eager Loading で取得した全投稿を user_id をキーにした辞書に変換してから、各ユーザーに対応する投稿を高速に紐付ける仕組みを読みました。  
+最後に BelongsTo.php を読んで、HasMany が $user->posts（User から Post を見る）であるのに対して、BelongsTo は $post->user（Post から User を見る）という逆方向のリレーションであることを理解しました。同じ posts.user_id を使いながらも向きが逆になっているのが大きな発見でした。  
+全体を通じて、$user->posts というたった一行の裏側に __construct() から getResults() まで多くの処理が動いていることが見えた一日でした。
+
 ## 2026-05-27
 
 ### `save()` の全体像
