@@ -58,6 +58,26 @@
 
 ## 2026-05-29
 
+### 本日学んだこと
+
+今日は HasOneOrMany.php、HasMany.php、BelongsTo.php を中心に読み進め、最後に現場のテストコードも読みました。  
+まず __construct() から読み始め、foreignKey や localKey などの必要な情報をセットしてから parent::__construct() で親クラスの Relation に共通処理を委譲する仕組みを理解しました。parent:: が「継承元のクラスのメソッドを呼ぶ」という意味であることも理解できました。  
+addConstraints() では $user->posts と書いたときに WHERE posts.user_id = 1 という WHERE 句が自動的に組み立てられる仕組みを理解しました。static::$constraints というスイッチによって通常時は WHERE 句が付き、Eager Loading のときは一時的に OFF になることもわかりました。  
+buildDictionary() と matchOneOrMany() では、Eager Loading で取得した全データをインデックスのような辞書に変換してから各モデルに高速に紐付ける仕組みを理解しました。辞書がデータベースのインデックスと同じ発想であることも気づけました。  
+BelongsTo.php では associate() と dissociate() を読み、外部キーのセットと解除の仕組みを理解しました。HasMany が「1対多の1側」で BelongsTo が「1対多の多側」という関係も整理できました。また自己参照リレーションという同じテーブルが自分自身を参照する仕組みも理解しました。  
+最後に現場のテストコードを読み、Pestというシンプルなテストフレームワークの書き方を理解しました。test('説明', function() { 処理 }) という構文の繰り返しでCRUDテストが書かれていることも確認しました
+
+## 2026-05-28
+
+### 5/28学んだこと
+
+5/28は HasOneOrMany.php、HasMany.php、BelongsTo.php の 3 つのファイルを読みました。  
+まず __construct() から読み始め、foreignKey や localKey などの必要な情報をセットしてから parent::__construct() で親クラスの Relation に共通処理を委譲する仕組みを理解しました。引数がどこから来るのかを追いかけながら読むことで、クラス間のつながりが見えてきました。  
+次に addConstraints() を読み、$user->posts と書いたときに WHERE posts.user_id = 1 という WHERE 句が自動的に組み立てられる仕組みを理解しました。static::$constraints というスイッチによって、通常時は WHERE 句が付き、Eager Loading のときは一時的に OFF になる仕組みも理解しました。  
+buildDictionary() と matchOneOrMany() では、Eager Loading で取得した全投稿を user_id をキーにした辞書に変換してから、各ユーザーに対応する投稿を高速に紐付ける仕組みを読みました。  
+最後に BelongsTo.php を読んで、HasMany が $user->posts（User から Post を見る）であるのに対して、BelongsTo は $post->user（Post から User を見る）という逆方向のリレーションであることを理解しました。同じ posts.user_id を使いながらも向きが逆になっているのが大きな発見でした。  
+全体を通じて、$user->posts というたった一行の裏側に __construct() から getResults() まで多くの処理が動いていることが見えた一日でした。
+
 ## 2026-05-27
 
 ### `save()` の全体像
