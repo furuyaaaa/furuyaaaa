@@ -16,6 +16,48 @@
 
 ---
 
+## 2026-06-05
+
+### 1. SQL 練習（pgexercises.com ＋ リテールデータセット）
+
+`daily_retail_data` テーブルを使った実践クエリを中心に、以下の構文・関数を学習した。
+
+| トピック | 内容 |
+|----------|------|
+| `WHERE IN` | 複数条件を一括指定する構文 |
+| `DISTINCT` | 複数カラムにまたがる重複除去 |
+| `UNION` / `UNION ALL` | 重複排除の有無の違い |
+| `LIMIT` + `ORDER BY` | 件数制限と並び順の組み合わせ |
+| 日付関数 | `EXTRACT`、`generate_series`、`::timestamp` 型キャスト |
+| `COUNT(*) AS` | 集計結果への別名付け |
+| `LIKE` | ワイルドカードを使ったあいまい検索 |
+| `JOIN` + テーブル別名 | 複数テーブルの結合とエイリアス |
+
+実際にクエリを書いて提出し、添削を受けるサイクルで練習。`DESC` と `ASC` の書き間違い、`SELECT *` の省略ミス、`COUNT(*)` への `AS` 付け忘れなど、実際のミスを通じて定着させた。
+
+### 2. Laravel `Validator.php` ソースコード読み
+
+以下のメソッドを読み進めた。
+
+- `validateAttribute`
+- `dependsOnOtherFields`
+- `isValidatable`
+- `isImplicit`
+- `passesOptionalCheck`
+- `isNotNullIfMarkedAsNullable`
+- `hasNotFailedPreviousRuleIfPresenceRule`
+- `validateUsingCustomRule`
+
+**掴んだ感覚**: 早期リターン（`return true` / `return false`）を積み重ねてバリデーション可否を判定するパターンが繰り返し登場することに気づき、構造の読み解き方が身についてきた。
+
+### 3. 重要な方針転換（学習戦略の見直し）
+
+この日の最大の収穫は、**「Laravel ソースを 1 行ずつ読むことは最善ではない」** という結論に至ったこと。
+
+AI が実装を担う時代において、自分の本当の価値は **要件定義・AI への正確な指示・結果の検証** にある、という認識を固めた。一方で SQL は **AI が生成したクエリの検証** に不可欠なため、引き続き重点的に学ぶべき領域として位置づけを明確化した。
+
+SQL 実践と方針転換という、技術面と戦略面の両方で充実した 1 日だった。
+
 ## 2026-06-03
 
 ### 1. Laravel ソースコードリーディング（Validator.php）
@@ -335,7 +377,6 @@ BelongsTo.php では associate() と dissociate() を読み、外部キーのセ
 buildDictionary() と matchOneOrMany() では、Eager Loading で取得した全投稿を user_id をキーにした辞書に変換してから、各ユーザーに対応する投稿を高速に紐付ける仕組みを読みました。  
 最後に BelongsTo.php を読んで、HasMany が $user->posts（User から Post を見る）であるのに対して、BelongsTo は $post->user（Post から User を見る）という逆方向のリレーションであることを理解しました。同じ posts.user_id を使いながらも向きが逆になっているのが大きな発見でした。  
 全体を通じて、$user->posts というたった一行の裏側に __construct() から getResults() まで多くの処理が動いていることが見えた一日でした。
-
 ## 2026-05-27
 
 ### `save()` の全体像
