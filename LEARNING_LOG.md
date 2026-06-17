@@ -16,6 +16,39 @@
 
 ---
 
+## 2026-06-17
+
+### 1. Java 基礎・IntelliJ 環境構築
+
+- JDK / JRE / JVM の役割を整理した。
+- Java の OOP（オブジェクト指向）概念を確認した。
+- PHP との違いを比較しながら、Java の書き方や実行の流れを理解した。
+- IntelliJ IDEA で `Hello World` を実行し、Java 学習用プロジェクトの初期環境を整えた。
+- 最初の Java 学習内容を Git で初コミットした。
+
+### 2. Spring Boot REST API ハンズオン
+
+- Spring Boot で REST API の基本形を実装した。
+- `@RestController`、`@GetMapping`、`@PathVariable`、`@RequestBody` の役割を確認した。
+- API ハンズオン中に発生したエラーを 3 件解決し、Spring Boot のリクエスト処理の流れを理解した。
+
+### 3. 1 ヶ月学習計画策定
+
+- Java / Spring Boot を中心に、1 ヶ月の学習計画を Phase 1〜4 に分けて整理した。
+- 最終目標として、**JWT 認証付き CRUD API** を作れる状態を設定した。
+- 環境構築、基礎文法、REST API、認証・CRUD 実装までの流れを段階的に進める方針を決めた。
+
+### 4. Cloudflare Tunnel 検討
+
+- `jikoseityo.com` を Cloudflare 管理下に移し、スマホから公開確認できる構成を検討した。
+- Cloudflare Tunnel を使うことで、ローカル開発環境を安全に外部公開する流れを確認した。
+
+### 気づき
+
+- Java は PHP と比べて型やクラス構造を強く意識するため、最初は重く感じるが、API 開発や大規模開発では設計の見通しが立てやすいと感じた。
+- Spring Boot はアノテーションの意味を押さえると、ルーティング・リクエスト受け取り・レスポンス返却の流れが見えやすくなる。
+- 学習計画を Phase に分けたことで、最終目標の JWT 認証 CRUD API までの道筋が明確になった。
+
 ## 2026-06-16
 
 ### 1. ネットワーク基礎（インターネット接続・通信の仕組み）
