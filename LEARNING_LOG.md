@@ -16,6 +16,98 @@
 
 ---
 
+## 2026-07-14
+
+### 1. 詳細設計全体の復習
+
+- タスク管理システムの詳細設計全体を復習した。
+- Spring Boot の構成要素として、`Controller`、`Service`、`Repository`、`DTO`、`Entity` の役割を整理した。
+- SQL、シーケンス図、データベース連携の流れを確認した。
+
+### 2. 詳細設計書作成
+
+- Controller 設計を整理した。
+- Service 設計を整理した。
+- Repository 設計を整理した。
+- JPQL を利用した検索メソッド（`@Query`）の設計を確認した。
+- DTO 設計を整理した。
+- Entity 設計を整理した。
+- シーケンス図と SQL 設計を確認した。
+- 詳細設計書に **記載する内容** と **記載しない内容** の線引きを整理した。
+
+### 3. Spring Data JPA と JPQL
+
+- Spring Data JPA の役割を復習した。
+- `@Query` を使った JPQL の考え方を確認した。
+- Repository が DB 操作の窓口になり、Entity とテーブルのマッピングを通じてデータを扱う流れを整理した。
+
+### 4. DTO 設計
+
+- DTO の役割を整理した。
+- DTO は画面・API の入出力に使うデータの形を表すものとして理解した。
+- Laravel でいう `Resource` や `Request` との違いを確認した。
+- Spring Boot では DTO、Entity、Request / Response 相当の責務を分けて考えることが重要だと整理した。
+
+### 5. Laravel と Spring Boot の比較
+
+- Laravel と Spring Boot の構成を比較した。
+- Laravel の経験を Spring Boot の `Controller` / `Service` / `Repository` / `Entity` / `DTO` に置き換えて理解した。
+- Java の現在のスキルレベルを整理し、今後伸ばすべき領域を確認した。
+
+### 6. Laravel ルーティング
+
+- `Route::get()` の書き方を確認した。
+- Controller へのルーティング方法を整理した。
+- `name()` によるルート名設定を確認した。
+- URL、Controller のメソッド、ルート名のそれぞれの違いを整理した。
+
+### 気づき
+
+- レイヤー構造を理解すると、各クラスの責務が見えやすくなる。
+- Spring Boot では、Controller が入口、Service が業務ロジック、Repository が DB 操作、Entity がテーブル対応、DTO が入出力データの形を担う。
+- 詳細設計書を作ることで、実装前に処理の流れ・責務・データの受け渡しを整理できる。
+- Laravel のルーティングと Spring Boot の Controller 設計を比較すると、「リクエストをどこに渡すか」という共通構造が見えやすい。
+
+## 2026-07-13
+
+### システム開発
+
+- タスク管理システムの詳細設計全体を確認した。
+- Repository、Entity、DTO、Service の役割を整理した。
+- 業務システムで使われる設計書の流れを確認した。
+
+### 振り返り
+
+- Laravel で学んだ構造を Spring Boot に置き換えて理解することを意識した。
+- 既に知っている概念と新しい技術を対応させることで、Spring Boot の構成が掴みやすくなった。
+
+## 2026-07-10
+
+### 1. システム開発
+
+- タスク管理システムの詳細設計を開始した。
+- Controller 設計の考え方を学習した。
+- `getTasks` が複数形で、それ以外のメソッドが単数形になっている理由を確認した。
+- 一覧取得は複数件を返すため `getTasks`、詳細取得・作成・更新・削除は基本的に単一リソースを扱うため単数形になる、と整理した。
+
+### 2. Spring Boot / ORM
+
+- Spring Boot における ORM（Spring Data JPA）の役割を理解した。
+- Entity とテーブルがマッピングされ、Repository を通じて DB 操作を行う流れを確認した。
+- Spring Data JPA により、SQL を直接すべて書かなくても基本的な CRUD 操作を扱えることを整理した。
+
+### 3. Laravel との比較
+
+- `Repository ≒ Laravel の Model` という考え方を確認した。
+- Entity と Model の違いを整理した。
+- Laravel では Model が ORM の中心になりやすい一方、Spring Boot では Entity と Repository に責務が分かれると理解した。
+- テーブルとのマッピング（ORM）の仕組みを、Laravel 経験と比較しながら確認した。
+
+### 気づき
+
+- Spring Boot は Laravel よりもクラスの責務が細かく分かれているため、最初に Controller / Service / Repository / Entity / DTO の役割を押さえることが重要。
+- 命名の単数・複数には、扱うデータが 1 件か複数件かという設計意図が表れる。
+
 ## 2026-07-09
 
 ### 1. 要件定義書の最終調整
